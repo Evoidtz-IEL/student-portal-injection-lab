@@ -1,0 +1,21 @@
+# Konfigurasi environment lokal
+.env
+*.local
+
+# File log
+*.log
+error_log
+
+# Cache & tmp
+/tmp/
+/cache/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Backup database
+*.sql.bak
+database/*.sql.bak
