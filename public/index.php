@@ -14,7 +14,7 @@
 </head>
 <body>
     <h1>Student Portal Injection Lab</h1>
-    <p>Website latihan keamanan aplikasi — sengaja dibuat <strong>rentan terhadap SQL Injection</strong> untuk keperluan pembelajaran DevSecOps.</p>
+    <p>Website latihan keamanan aplikasi — sengaja dibuat <strong>rentan terhadap SQL Injection &amp; Command Injection</strong> untuk keperluan pembelajaran DevSecOps.</p>
 
     <div class="card">
         <h2><a href="login.php">Halaman Login</a></h2>
@@ -23,6 +23,10 @@
     <div class="card">
         <h2><a href="search.php">Pencarian Mahasiswa</a></h2>
         <p>Uji SQL Injection pada fitur pencarian (data extraction).</p>
+    </div>
+    <div class="card">
+        <h2><a href="ping.php">Command Injection (Ping)</a></h2>
+        <p>Uji Command Injection pada fitur ping (eksekusi perintah OS).</p>
     </div>
     <div class="card">
         <h2><a href="diagnostic.php">Diagnostik</a></h2>

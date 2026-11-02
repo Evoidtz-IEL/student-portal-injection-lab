@@ -1,7 +1,8 @@
 # Student Portal Injection Lab
 
 Website latihan keamanan aplikasi berbasis PHP yang **sengaja dibuat rentan
-terhadap SQL Injection** untuk keperluan pembelajaran (tugas DevSecOps).
+terhadap SQL Injection & Command Injection** untuk keperluan pembelajaran
+(tugas DevSecOps).
 
 > ⚠️ Aplikasi ini hanya untuk belajar di lingkungan lokal. Jangan di-deploy ke
 > server publik.
@@ -11,6 +12,8 @@ terhadap SQL Injection** untuk keperluan pembelajaran (tugas DevSecOps).
 - **Login** (`public/login.php`) — rentan terhadap authentication bypass.
 - **Pencarian Mahasiswa** (`public/search.php`) — rentan terhadap data
   extraction via UNION-based injection.
+- **Command Injection** (`public/ping.php`) — rentan terhadap eksekusi
+  perintah OS.
 - **Diagnostik** (`public/diagnostic.php`) — cek koneksi DB & environment.
 
 ## Struktur
@@ -25,6 +28,7 @@ student-portal-injection-lab/
 │   ├── index.php         # beranda
 │   ├── login.php         # form login (rentan)
 │   ├── search.php        # pencarian (rentan)
+│   ├── ping.php          # command injection (rentan)
 │   └── diagnostic.php    # cek environment
 └── src/
     └── database.php      # koneksi DB (SQLite, auto-seed)
@@ -65,6 +69,10 @@ dibuat **otomatis** saat pertama kali halaman diakses.
 - **Login bypass** — username: `' OR '1'='1` (password bebas)
 - **Data extraction** — kolom pencarian:
   `' UNION SELECT id, username, password, role, NULL FROM users --`
+
+## Contoh Payload Command Injection
+
+- **Ping** — kolom host: `127.0.0.1; whoami` atau `; ls -la`
 
 ## Dokumentasi Kerentanan
 
