@@ -116,6 +116,55 @@ Hash password dengan `password_hash()` / `password_verify()` (bcrypt/argon2).
 
 ---
 
+## 5. Command Injection — Eksekusi Perintah OS (ping.php)
+
+- **Lokasi:** `public/ping.php`
+- **Tingkat keparahan:** Kritis
+- **Penyebab:** Input `host` langsung digabungkan ke perintah shell tanpa
+  sanitasi melalui `shell_exec()`.
+
+```php
+$command = "ping -c 4 " . $host;
+$output = shell_exec($command . " 2>&1");
+```
+
+### Contoh eksploitasi
+
+Isi kolom host dengan salah satu:
+
+- `127.0.0.1; whoami`
+- `127.0.0.1 && id`
+- `; ls -la`
+
+Perintah yang terbentuk (untuk input pertama):
+
+```bash
+ping -c 4 127.0.0.1; whoami
+```
+
+Titik koma (`;`) memisahkan dua perintah, sehingga `whoami` ikut dijalankan di
+server. Penyerang bisa mengeksekusi perintah OS apa pun: membaca file
+(`cat`), melihat daftar file (`ls`), bahkan menghapus data (`rm`).
+
+### Perbaikan
+
+Jangan gabungkan input pengguna langsung ke perintah shell. Minimal gunakan
+validasi whitelist + `escapeshellarg()`:
+
+```php
+// Hanya izinkan karakter hostname/IP yang valid
+if (!preg_match('/^[a-zA-Z0-9.\-]+$/', $host)) {
+    die('Host tidak valid.');
+}
+$command = "ping -c 4 " . escapeshellarg($host);
+$output = shell_exec($command . " 2>&1");
+```
+
+Cara paling aman: hindari `shell_exec()` sama sekali. Gunakan `proc_open()`
+dengan argumen berbentuk array (tanpa shell), atau validasi whitelist ketat.
+
+---
+
 ## Rekomendasi Umum
 
 1. Selalu pakai **prepared statements** untuk semua query berparameter.
@@ -123,3 +172,4 @@ Hash password dengan `password_hash()` / `password_verify()` (bcrypt/argon2).
 3. Hash password; jangan pernah simpan plaintext.
 4. Sembunyikan pesan error internal dari pengguna.
 5. Terapkan **input validation** dan **output encoding**.
+6. Jangan pernah menggabungkan input pengguna ke perintah shell tanpa sanitasi.
